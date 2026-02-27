@@ -8,9 +8,9 @@ import 'package:convert_io/engine/wav_buffer_engine.dart';
 import 'package:convert_io/utils/my_custom_appbar.dart';
 import 'package:convert_io/utils/my_custom_button.dart';
 import 'package:convert_io/utils/my_custom_text_field.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../engine/greyscale_engine.dart';
 
@@ -242,13 +242,32 @@ class _EncoderPageState extends State<EncoderPage> {
   }
 
   Future<void> saveAudio() async {
-    final dir = await getExternalStorageDirectory();
+    if (wavBytes == null) return;
 
-    if (fileName.text.isEmpty) {
-      fileName.text = "BRO TOLD YOU TO ENTER THE FILE NAME BRUHH";
+    String name = fileName.text.trim();
+
+    if (name.isEmpty) {
+      name = "gugugaga.wav";
     }
 
-    final file = File("${dir!.path}/${fileName.text}.wav");
+    if (!name.endsWith(".wav")) {
+      name = "$name.wav";
+    }
+
+    String? outputFile = await FilePicker.platform.saveFile(
+      dialogTitle: 'Choose where to save WAV',
+      fileName: name,
+      type: FileType.custom,
+      allowedExtensions: ['wav'],
+      bytes: wavBytes!,
+    );
+
+    if (outputFile == null) {
+      print("User cancelled");
+      return;
+    }
+
+    final file = File(outputFile);
 
     await file.writeAsBytes(wavBytes!);
 

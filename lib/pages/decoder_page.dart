@@ -46,7 +46,11 @@ class _DecoderPageState extends State<DecoderPage> {
                       _audioFile != null
                           ? _audioFile!.path
                           : "No Audio is selected.\nHere the selected audio path will be shown.",
-                      style: TextStyle(fontSize: 16, fontFamily: "monospace", color: tertiary),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: "monospace",
+                        color: tertiary,
+                      ),
                     ),
                   ),
                 ),
@@ -82,7 +86,14 @@ class _DecoderPageState extends State<DecoderPage> {
                   width: 300,
                   child: _decodedImage == null
                       ? Center(
-                          child: Text("Noo decoded image", style: TextStyle(fontSize: 18, fontFamily: "monospace", color: tertiary)),
+                          child: Text(
+                            "Noo decoded image",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontFamily: "monospace",
+                              color: tertiary,
+                            ),
+                          ),
                         )
                       : RawImage(image: _decodedImage, fit: BoxFit.contain),
                 ),
@@ -96,14 +107,45 @@ class _DecoderPageState extends State<DecoderPage> {
 
   Future<void> pickZaAudioFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['wav'],
+      type: FileType.audio,
+      withData: true,
+      withReadStream: true,
     );
-    if (result != null) {
-      setState(() {
-        _audioFile = File(result.files.single.path!);
-      });
+
+    if (result == null) return;
+
+    final picked = result.files.single;
+
+    File? file;
+
+    // Case 1: Real file path available
+    if (picked.path != null) {
+      file = File(picked.path!);
     }
+    // Case 2: Bytes available
+    else if (picked.bytes != null) {
+      final tempFile = File("${Directory.systemTemp.path}/temp_audio.wav");
+
+      await tempFile.writeAsBytes(picked.bytes!);
+
+      file = tempFile;
+    }
+    // Case 3: Stream available
+    else if (picked.readStream != null) {
+      final tempFile = File("${Directory.systemTemp.path}/temp_audio.wav");
+
+      final sink = tempFile.openWrite();
+
+      await picked.readStream!.pipe(sink);
+
+      await sink.close();
+
+      file = tempFile;
+    }
+
+    setState(() {
+      _audioFile = file;
+    });
   }
 
   Future<void> playAudio() async {
