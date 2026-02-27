@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../constants/constant.dart';
+
 class MyCustomButton extends StatelessWidget {
   final String text;
   final void Function()? onTap;
@@ -11,7 +13,7 @@ class MyCustomButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary,
+          color: secondary,
           borderRadius: BorderRadius.circular(10),
         ),
         padding: const EdgeInsets.all(25),
@@ -23,6 +25,7 @@ class MyCustomButton extends StatelessWidget {
               fontFamily: "monospace",
               fontSize: 16,
               letterSpacing: 3,
+              color: tertiary
             ),
           ),
         ),

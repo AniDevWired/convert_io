@@ -21,7 +21,11 @@ class WavBufferEngine {
       greyscaleImage.height,
     );
 
-    return samplesToWavBuffer(audioSamples);
+    return samplesToWavBuffer(
+      audioSamples,
+      greyscaleImage.width,
+      greyscaleImage.height,
+    );
   }
 
   static Float32List convertPixelsToSamples(
@@ -46,7 +50,11 @@ class WavBufferEngine {
     return samples;
   }
 
-  static Future<Uint8List> samplesToWavBuffer(Float32List audioSamples) async {
+  static Future<Uint8List> samplesToWavBuffer(
+    Float32List audioSamples,
+    int width,
+    int height,
+  ) async {
     int rate = 44100;
 
     int len = audioSamples.length;
@@ -57,10 +65,13 @@ class WavBufferEngine {
 
     // RIFF header
     builder.add("RIFF".codeUnits);
-    builder.add(_int32(36 + dataSize));
+
+    // 36 + fmt(24) + IMGF(16) + dataSize
+    builder.add(_int32(52 + dataSize));
+
     builder.add("WAVE".codeUnits);
 
-    // Format block
+    // FORMAT CHUNK
     builder.add("fmt ".codeUnits);
     builder.add(_int32(16));
     builder.add(_int16(1)); // PCM
@@ -70,11 +81,18 @@ class WavBufferEngine {
     builder.add(_int16(2));
     builder.add(_int16(16));
 
-    // Data block
+    // IMAGE INFO CHUNK (CUSTOM)
+    builder.add("IMGF".codeUnits);
+    builder.add(_int32(8));
+
+    builder.add(_int32(width));
+    builder.add(_int32(height));
+
+    // DATA CHUNK
     builder.add("data".codeUnits);
     builder.add(_int32(dataSize));
 
-    // Write audio samples
+    // AUDIO DATA
     for (int i = 0; i < len; i++) {
       double s = audioSamples[i].clamp(-1.0, 1.0);
 

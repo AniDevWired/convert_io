@@ -3,9 +3,11 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:convert_io/constants/constant.dart';
 import 'package:convert_io/engine/wav_buffer_engine.dart';
 import 'package:convert_io/utils/my_custom_appbar.dart';
 import 'package:convert_io/utils/my_custom_button.dart';
+import 'package:convert_io/utils/my_custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -32,70 +34,158 @@ class _EncoderPageState extends State<EncoderPage> {
 
   final player = AudioPlayer();
 
+  String filePath = "";
+
+  TextEditingController fileName = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyCustomAppbar(title: "ENCODER"),
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: surface,
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // icons -->
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      pickImageFromCam();
-                    },
-                    icon: Icon(Icons.camera_rounded),
-                    iconSize: 55,
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      pickImageFromGallery();
-                    },
-                    icon: Icon(Icons.photo_album_rounded),
-                    iconSize: 55,
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 16),
-
-              // image preview -->
-              SizedBox(
-                height: 300,
-                width: 300,
-                child: _imageFile != null
-                    ? Image.file(_imageFile!)
-                    : Text(
-                        "No Image selected",
-                        style: TextStyle(
-                          fontSize: 26,
-                          color: Theme.of(context).colorScheme.tertiary,
-                        ),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                // controls like cam and gal
+                // cam -->
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        pickImageFromCam();
+                      },
+                      icon: Icon(Icons.camera_rounded),
+                      iconSize: 45,
+                      color: tertiary,
+                    ),
+                    SizedBox(width: 20),
+                    Text(
+                      "CAMERA",
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontFamily: "monospace",
+                        letterSpacing: 2,
+                        color: tertiary,
                       ),
-              ),
+                    ),
+                  ],
+                ),
 
-              // convert button -->
-              MyCustomButton(
-                text: "CONVERT",
-                onTap: isProcessing ? null : processImage,
-              ),
-              SizedBox(height: 16),
-              // show audio -->
-              SizedBox(
-                height: 300,
-                width: 300,
-                child: RawImage(image: _processedImage, fit: BoxFit.contain),
-              ),
-              SizedBox(height: 16),
-              // play btn
-              MyCustomButton(text: "Play Audio", onTap: wavBytes == null ? null : playAudio),
-              // save btn
-              MyCustomButton(text: "Save audio", onTap: wavBytes == null ? null : saveAudio)
-            ],
+                const SizedBox(height: 16),
+
+                // gal -->
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        pickImageFromGallery();
+                      },
+                      icon: Icon(Icons.image_rounded),
+                      iconSize: 45,
+                      color: tertiary,
+                    ),
+                    SizedBox(width: 20),
+                    Text(
+                      "GALLERY",
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontFamily: "monospace",
+                        letterSpacing: 2,
+                        color: tertiary,
+                      ),
+                    ),
+                  ],
+                ),
+
+                // image preview -->
+                SizedBox(
+                  height: 300,
+                  width: 300,
+                  child: _imageFile != null
+                      ? Image.file(_imageFile!)
+                      : Center(
+                          child: Text(
+                            "*No Image selected\n\n*Select image by pressing the camera icon\n\n*Select image by pressing gallery icon",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontFamily: "monospace",
+                              color: tertiary,
+                            ),
+                          ),
+                        ),
+                ),
+
+                // convert button -->
+                MyCustomButton(
+                  text: "CONVERT",
+                  onTap: isProcessing ? null : processImage,
+                ),
+                SizedBox(height: 16),
+                // show audio -->
+                SizedBox(
+                  height: 300,
+                  width: 300,
+                  child: _processedImage == null
+                      ? Center(
+                          child: Text(
+                            "Convert image to see the grey scale output\n\nWrite the file name before saving",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontFamily: "monospace",
+                              color: tertiary,
+                            ),
+                          ),
+                        )
+                      : RawImage(image: _processedImage, fit: BoxFit.contain),
+                ),
+                SizedBox(height: 16),
+                // play btn -->
+                MyCustomButton(
+                  text: "Play Audio",
+                  onTap: wavBytes == null ? null : playAudio,
+                ),
+
+                SizedBox(height: 16),
+
+                // stop btn -->
+                MyCustomButton(text: "Stop Audio", onTap: stopAudio),
+
+                SizedBox(height: 16),
+
+                MyCustomTextField(
+                  hintText: "Enter file name before saving",
+                  obscureText: false,
+                  controller: fileName,
+                  enableSuggestions: false,
+                ),
+
+                SizedBox(height: 16),
+
+                // save btn -->
+                MyCustomButton(
+                  text: "Save Audio",
+                  onTap: wavBytes == null ? null : saveAudio,
+                ),
+
+                SizedBox(height: 16),
+
+                Text(
+                  filePath.isEmpty
+                      ? "No wav was generated"
+                      : "Audio saved to $filePath",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: tertiary,
+                    fontFamily: "monospace",
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -128,9 +218,13 @@ class _EncoderPageState extends State<EncoderPage> {
     });
 
     try {
-      ui.Image processedImage = await GreyscaleEngine.applyGreyscale(_imageFile!);
+      ui.Image processedImage = await GreyscaleEngine.applyGreyscale(
+        _imageFile!,
+      );
 
-      wavBytes = await WavBufferEngine.fromGreyScaleImageToWavBytes(processedImage);
+      wavBytes = await WavBufferEngine.fromGreyScaleImageToWavBytes(
+        processedImage,
+      );
 
       setState(() {
         _processedImage = processedImage;
@@ -150,14 +244,20 @@ class _EncoderPageState extends State<EncoderPage> {
   Future<void> saveAudio() async {
     final dir = await getExternalStorageDirectory();
 
-    final file = File("${dir!.path}/output.wav");
+    if (fileName.text.isEmpty) {
+      fileName.text = "BRO TOLD YOU TO ENTER THE FILE NAME BRUHH";
+    }
+
+    final file = File("${dir!.path}/${fileName.text}.wav");
 
     await file.writeAsBytes(wavBytes!);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("Audio saved to ${file.path}"),
-      ),
-    );
+    setState(() {
+      filePath = file.path;
+    });
+  }
+
+  Future<void> stopAudio() async {
+    await player.stop();
   }
 }

@@ -1,5 +1,5 @@
 import 'package:convert_io/constants/constant.dart';
-import 'package:convert_io/pages/encoder_page.dart';
+import 'package:convert_io/utils/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,8 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: darkMode,
-      home: EncoderPage()
+      home: BottomNavBar(),
     );
   }
 }

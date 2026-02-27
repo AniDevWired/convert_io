@@ -1,6 +1,7 @@
+import 'package:convert_io/constants/constant.dart';
 import 'package:flutter/material.dart';
 
-class MyCustomAppbar extends StatelessWidget implements PreferredSizeWidget{
+class MyCustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   const MyCustomAppbar({super.key, required this.title});
 
@@ -11,18 +12,16 @@ class MyCustomAppbar extends StatelessWidget implements PreferredSizeWidget{
         title,
         style: TextStyle(
           fontSize: 26,
-          color: Theme.of(context).colorScheme.tertiary,
+          color: tertiary,
           fontFamily: "monospace",
-          letterSpacing: 3
+          letterSpacing: 3,
         ),
       ),
       centerTitle: true,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          bottom: Radius.circular(20)
-        )
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
       ),
-      backgroundColor: Theme.of(context).colorScheme.secondary,
+      backgroundColor: secondary,
     );
   }
 

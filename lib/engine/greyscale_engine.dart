@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 class GreyscaleEngine {
-
   static Future<ui.Image> applyGreyscale(File? imageFile) async {
     if (imageFile == null) {
       throw Exception("No image file selected");
@@ -48,10 +47,10 @@ class GreyscaleEngine {
   }
 
   static Future<Uint8List> convertToGreyscale(
-      Uint8List rgbaBytes,
-      int width,
-      int height,
-      ) async {
+    Uint8List rgbaBytes,
+    int width,
+    int height,
+  ) async {
     // create a buffer for greyscale output
     Uint8List greyscaleBytes = Uint8List(rgbaBytes.length);
 
