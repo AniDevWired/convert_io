@@ -1,6 +1,6 @@
 # convert_io
 
-A new Flutter project.
+A Flutter project to convert image to sound and sound to image.
 
 ## Getting Started
 
@@ -15,3 +15,7 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 # convert_io
+
+# TODO
+- add isolate to the conversion and a progress bar
+- add some vibrations to the btns
