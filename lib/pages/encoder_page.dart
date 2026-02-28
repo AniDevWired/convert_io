@@ -171,19 +171,6 @@ class _EncoderPageState extends State<EncoderPage> {
                   text: "Save Audio",
                   onTap: wavBytes == null ? null : saveAudio,
                 ),
-
-                SizedBox(height: 16),
-
-                Text(
-                  filePath.isEmpty
-                      ? "No wav was generated"
-                      : "Audio saved to $filePath",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: tertiary,
-                    fontFamily: "monospace",
-                  ),
-                ),
               ],
             ),
           ),
@@ -262,12 +249,7 @@ class _EncoderPageState extends State<EncoderPage> {
       bytes: wavBytes!,
     );
 
-    if (outputFile == null) {
-      print("User cancelled");
-      return;
-    }
-
-    final file = File(outputFile);
+    final file = File(outputFile!);
 
     await file.writeAsBytes(wavBytes!);
 
