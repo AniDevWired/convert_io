@@ -11,78 +11,84 @@ This project demonstrates how digital information can be represented across diff
 
 ---
 
-# Features
+## Features
 
-- 📷 Image → Sound
-  
-  - Reads pixel data from an image
-  - Converts pixel intensity values into audio sample values
-  - Generates a playable audio file
+### 📷 Image → Sound
 
-- 🔊 Sound → Image
-  
-  - Reads raw audio sample data
-  - Maps amplitude values into pixel brightness
-  - Reconstructs an image from audio signals
+- Reads pixel data from an image
+- Converts pixel intensity values into audio sample values
+- Generates a playable audio file
 
-- ⚡ Built using Flutter for cross-platform support
+### 🔊 Sound → Image
+
+- Reads raw audio sample data
+- Maps amplitude values into pixel brightness
+- Reconstructs an image from audio signals
+
+⚡ Built using **Flutter** for cross-platform support.
 
 ---
 
-# Download Application
+## Download Application
 
-You can download the compiled application from Google Drive:
+You can download the compiled application from Google Drive.
 
-Application (APK):
+**Application (APK):**  
 https://drive.google.com/file/d/1BqROMTJTtpppJPMezhOtccxGSy64XFIO/view?usp=drivesdk
 
 ---
 
-Sample Output
+## Sample Output
 
-Example audio generated from an image:
+Example audio generated from an image.
 
-Sample Audio File:
+**Sample Audio File:**  
 https://drive.google.com/file/d/1s89FwhinvGZLotarmHsKxs2eNHWoOIQQ/view?usp=drivesdk
 
 ---
 
-Installation (From Source)
+## Installation (From Source)
 
-1. Clone the repository
+### 1. Clone the repository
 
+```bash
 git clone https://github.com/AniDevWired/convert_io.git
 cd convert_io
+```
 
-2. Install dependencies
+### 2. Install dependencies
 
+```bash
 flutter pub get
+```
 
-3. Run the project
+### 3. Run the project
 
+```bash
 flutter run
+```
 
 ---
 
-How It Works
+## How It Works
 
-Image → Sound
+### Image → Sound
 
-1. Load an image file
-2. Extract pixel values from the image
-3. Convert pixel intensities into audio sample data
+1. Load an image file  
+2. Extract pixel values from the image  
+3. Convert pixel intensities into audio sample data  
 4. Encode the samples into a playable audio file (e.g. WAV)
 
-Sound → Image
+### Sound → Image
 
-1. Load an audio file
-2. Read raw audio sample values
-3. Map amplitude values to pixel brightness
+1. Load an audio file  
+2. Read raw audio sample values  
+3. Map amplitude values to pixel brightness  
 4. Generate an image from reconstructed pixel data
 
 ---
 
-Requirements
+## Requirements
 
 - Flutter SDK
 - Dart
@@ -91,15 +97,15 @@ Requirements
 
 ---
 
-Contributing
+## Contributing
 
 Contributions are welcome. Improvements to the conversion algorithms, UI, or performance are appreciated.
 
 ---
 
-Author
+## Author
 
-AniDevWired
+**AniDevWired**
 
-GitHub:
+GitHub:  
 https://github.com/AniDevWired
